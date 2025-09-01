@@ -1,6 +1,6 @@
 {
   "name": "psychquest-game",
-  "homepage": "https://meowligaya.github.io/psychquestweb/",
+  "homepage": "https://meowligaya.github.io/psychquestweb",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
