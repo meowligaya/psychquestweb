@@ -106,9 +106,6 @@ export default function IslandDashboard({ ageGroup, userName = "Explorer" }: Isl
             <Home className="w-5 h-5" />
           </Button>
           <Button variant="outline" size="icon" className="rounded-full">
-            <MessageCircle className="w-5 h-5" />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-full">
             <User className="w-5 h-5" />
           </Button>
           <Button variant="outline" size="icon" className="rounded-full">
