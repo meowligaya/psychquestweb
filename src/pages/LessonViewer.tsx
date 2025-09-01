@@ -13,7 +13,7 @@ const lessons = {
       { label: "Medium", color: "bg-orange-200 text-orange-800" },
       { label: "20 min", color: "bg-gray-200 text-gray-800", icon: "⏱️" },
     ],
-    pdfUrl: "/pdfs/navigating-life-transitions.pdf/",
+    pdfUrl: "psychquestweb/pdfs/navigating-life-transitions.pdf/",
     summary:
       "This interactive lesson contains valuable insights and practical exercises designed specifically for Young Adults.",
   },
