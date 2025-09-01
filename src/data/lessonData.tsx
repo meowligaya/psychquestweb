@@ -9,7 +9,7 @@ export const lessonsByQuest = {
         { label: "Easy", color: "bg-green-200 text-green-800" },
         { label: "10 min", color: "bg-gray-200 text-gray-800", icon: "⏱️" },
       ],
-      pdfUrl: "/pdfs/happy-face-hunt.pdf",
+      pdfUrl: "/pdfs/happy-face-hunt.pdf/",
       summary: "A fun lesson to help children recognize and name different emotions.",
     }
   ],
@@ -23,7 +23,7 @@ export const lessonsByQuest = {
         { label: "Medium", color: "bg-orange-200 text-orange-800" },
         { label: "15 min", color: "bg-gray-200 text-gray-800", icon: "⏱️" },
       ],
-      pdfUrl: "/pdfs/friendship-bridge.pdf",
+      pdfUrl: "/pdfs/friendship-bridge.pdf/",
       summary: "Learn how to build and maintain healthy friendships.",
     }
   ],
@@ -37,7 +37,7 @@ export const lessonsByQuest = {
         { label: "Medium", color: "bg-orange-200 text-orange-800" },
         { label: "20 min", color: "bg-gray-200 text-gray-800", icon: "⏱️" },
       ],
-      pdfUrl: "/pdfs/navigating-life-transitions.pdf",
+      pdfUrl: "/pdfs/navigating-life-transitions.pdf/",
       summary: "This interactive lesson contains valuable insights and practical exercises designed specifically for Young Adults.",
     },
     {
@@ -49,7 +49,7 @@ export const lessonsByQuest = {
         { label: "Medium", color: "bg-orange-200 text-orange-800" },
         { label: "25 min", color: "bg-gray-200 text-gray-800", icon: "⏱️" },
       ],
-      pdfUrl: "/pdfs/mental-health-basics.pdf",
+      pdfUrl: "/pdfs/mental-health-basics.pdf/",
       summary: "Get to know the basics of mental health and how to get help.",
     }
   ],
@@ -63,7 +63,7 @@ export const lessonsByQuest = {
         { label: "Advanced", color: "bg-red-200 text-red-800" },
         { label: "30 min", color: "bg-gray-200 text-gray-800", icon: "⏱️" },
       ],
-      pdfUrl: "/pdfs/work-life-balance.pdf",
+      pdfUrl: "/pdfs/work-life-balance.pdf/",
       summary: "Practical tips for adults to achieve work-life balance.",
     }
   ]
