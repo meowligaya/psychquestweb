@@ -21,8 +21,6 @@ import {
 import GameModal from "./GameModal";
 import BreathingModal from "./BreathingModal";
 import QuizModal from "./QuizModal";
-import ProfileSettingsModal from "./ProfileSettingsModal";
-import { useAuth } from "../hooks/useAuth"; 
 
 interface IslandDashboardProps {
   ageGroup: string;
@@ -86,8 +84,6 @@ export default function IslandDashboard({ ageGroup, userName = "Explorer" }: Isl
   const [gameModal, setGameModal] = useState({ isOpen: false, gameType: "", ageGroup: "" });
   const [breathingOpen, setBreathingOpen] = useState(false);
   const [quizModal, setQuizModal] = useState({ isOpen: false, quizType: "", ageGroup: "" });
-  const [profileOpen, setProfileOpen] = useState(false);
-  const { logout } = useAuth();
 
   return (
     <div className="min-h-screen p-2 sm:p-4">
@@ -99,19 +95,21 @@ export default function IslandDashboard({ ageGroup, userName = "Explorer" }: Isl
           </h1>
           <p className="text-muted-foreground text-base">Ready for your next adventure?</p>
         </div>
+        
         <div className="flex gap-2 sm:gap-3">
-          <Button variant="outline" size="icon" className="rounded-full" onClick={() => navigate(0)}>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="rounded-full"
+            onClick={() => navigate(0)}
+          >
             <Home className="w-5 h-5" />
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full" onClick={() => setProfileOpen(true)}>
+          <Button variant="outline" size="icon" className="rounded-full">
             <User className="w-5 h-5" />
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full" onClick={() => setProfileOpen(true)}>
+          <Button variant="outline" size="icon" className="rounded-full">
             <Settings className="w-5 h-5" />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-full" onClick={logout}>
-            {/* Optional: you can use a logout icon */}
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M16 17l5-5m0 0l-5-5m5 5H9m4 5v1a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2h4a2 2 0 012 2v1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Button>
         </div>
       </div>
@@ -119,7 +117,7 @@ export default function IslandDashboard({ ageGroup, userName = "Explorer" }: Isl
       {/* Island Overview */}
       <Card className="island-card mb-6 sm:mb-8">
         <div className="text-center p-4 sm:p-8">
-          <h2 className="text-2xl sm:text-4xl font~-bold text-gradient-sunset mb-2 sm:mb-3 font-nunito break-words">
+          <h2 className="text-2xl sm:text-4xl font-bold text-gradient-sunset mb-2 sm:mb-3 font-nunito break-words">
             {content.title}
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6">
@@ -309,8 +307,6 @@ export default function IslandDashboard({ ageGroup, userName = "Explorer" }: Isl
           </Card>
         </div>
       </div>
-
-      <ProfileSettingsModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
       
       <GameModal 
         isOpen={gameModal.isOpen}
