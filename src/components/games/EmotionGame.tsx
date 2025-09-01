@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,76 +13,166 @@ const emotions = [
   { emoji: "🤔", name: "Confused", color: "bg-green-100" }
 ];
 
-export default function EmotionGame() {
-  const [currentEmotion, setCurrentEmotion] = useState(emotions[0]);
-  const [score, setScore] = useState(0);
+const INITIAL_TOTAL_EMOJIS = 12; // start with 12 emojis
+const MAX_TOTAL_EMOJIS = 42; // max emojis to increase difficulty
+const MAX_SCORE = 10; // game ends at 10 points
+const ROUND_TIME = 15; // seconds per round
+
+export default function FindTheEmojiGame() {
   const [gameActive, setGameActive] = useState(false);
+  const [score, setScore] = useState(0);
+  const [commonEmotion, setCommonEmotion] = useState(emotions[0]);
+  const [targetEmotion, setTargetEmotion] = useState(emotions[1]);
+  const [targetIndex, setTargetIndex] = useState(0);
+  const [totalEmojis, setTotalEmojis] = useState(INITIAL_TOTAL_EMOJIS);
+  const [gameOver, setGameOver] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
 
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Start or reset game
   const startGame = () => {
-    setGameActive(true);
     setScore(0);
-    nextEmotion();
+    setTotalEmojis(INITIAL_TOTAL_EMOJIS);
+    setGameOver(false);
+    setGameActive(true);
+    setTimeLeft(ROUND_TIME);
+    setupRound(INITIAL_TOTAL_EMOJIS);
   };
 
-  const nextEmotion = () => {
-    const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
-    setCurrentEmotion(randomEmotion);
+  // Setup a new round with random common and target emotions and target position
+  const setupRound = (numEmojis: number) => {
+    let common, target;
+    do {
+      common = emotions[Math.floor(Math.random() * emotions.length)];
+      target = emotions[Math.floor(Math.random() * emotions.length)];
+    } while (common === target);
+
+    setCommonEmotion(common);
+    setTargetEmotion(target);
+    setTargetIndex(Math.floor(Math.random() * numEmojis));
+    setTotalEmojis(numEmojis);
+    setTimeLeft(ROUND_TIME);
   };
 
-  const handleEmotionClick = (selectedEmotion: typeof emotions[0]) => {
-    if (selectedEmotion.name === currentEmotion.name) {
-      setScore(score + 1);
-      toast.success("Correct! Well done! 🎉");
-      nextEmotion();
+  // Handle emoji click
+  const handleEmojiClick = (index: number) => {
+    if (!gameActive || gameOver) return;
+
+    if (index === targetIndex) {
+      const newScore = score + 1;
+      setScore(newScore);
+      toast.success("Correct! 🎉");
+
+      if (newScore >= MAX_SCORE) {
+        setGameOver(true);
+        setGameActive(false);
+        toast.success(`Game Over! Your final score is ${newScore}. 🎉`);
+        clearTimer();
+      } else {
+        // Increase difficulty every 2 points by adding 4 emojis, capped at MAX_TOTAL_EMOJIS
+        const nextTotal = Math.min(
+          INITIAL_TOTAL_EMOJIS + Math.floor(newScore / 2) * 4,
+          MAX_TOTAL_EMOJIS
+        );
+        setupRound(nextTotal);
+      }
     } else {
-      toast.error("Try again! Think about the feeling 🤗");
+      toast.error("Oops! Try again 👀");
     }
   };
+
+  // Clear timer on unmount or game end
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  // Timer effect
+  useEffect(() => {
+    if (gameActive && !gameOver) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((time) => {
+          if (time <= 1) {
+            clearTimer();
+            setGameOver(true);
+            setGameActive(false);
+            toast.error(`Time's up! Your final score is ${score}.`);
+            return 0;
+          }
+          return time - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearTimer();
+  }, [gameActive, gameOver, score]);
 
   return (
     <Card className="island-card p-6">
       <div className="text-center">
-        <h3 className="text-2xl font-bold mb-4 font-nunito">Emotion Matching Game</h3>
-        
-        {!gameActive ? (
+        <h3 className="text-2xl font-bold mb-4 font-nunito">Find the Unique Emoji</h3>
+
+        {!gameActive && !gameOver ? (
           <div>
             <p className="text-muted-foreground mb-4">
-              Match the emotion with its name! Help children learn about feelings.
+              Find the one emoji that is different from the others! Difficulty increases as you score. You have {ROUND_TIME} seconds per round.
             </p>
             <Button onClick={startGame} className="ocean-button">
               Start Game
             </Button>
           </div>
+        ) : gameOver ? (
+          <div>
+            <p className="text-lg font-semibold mb-6">
+              🎉 Game Over! Your final score is {score}.
+            </p>
+            <Button onClick={startGame} className="ocean-button">
+              Play Again
+            </Button>
+          </div>
         ) : (
           <div>
-            <div className="mb-6">
-              <Badge variant="secondary" className="mb-4">
-                Score: {score}
-              </Badge>
-              <div className="text-8xl mb-4">{currentEmotion.emoji}</div>
-              <p className="text-lg font-medium mb-6">
-                What emotion is this?
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3">
-              {emotions.map((emotion) => (
+            <Badge variant="secondary" className="mb-2">
+              Score: {score}
+            </Badge>
+            <Badge variant="secondary" className="mb-2">
+              Time Left: {timeLeft}s
+            </Badge>
+
+            <p className="mb-6 text-lg font-medium">
+              Find the <strong>{targetEmotion.name}</strong> emoji!
+            </p>
+
+            <div
+              className={`grid gap-3 justify-center mx-auto`}
+              style={{
+                gridTemplateColumns: `repeat(${Math.min(6, Math.ceil(Math.sqrt(totalEmojis)))}, minmax(0, 1fr))`,
+                maxWidth: "400px"
+              }}
+            >
+              {Array.from({ length: totalEmojis }).map((_, i) => (
                 <Button
-                  key={emotion.name}
+                  key={i}
                   variant="outline"
-                  className="p-4 h-auto"
-                  onClick={() => handleEmotionClick(emotion)}
+                  className="p-4 text-4xl"
+                  onClick={() => handleEmojiClick(i)}
                 >
-                  <span className="text-2xl mr-2">{emotion.emoji}</span>
-                  {emotion.name}
+                  {i === targetIndex ? targetEmotion.emoji : commonEmotion.emoji}
                 </Button>
               ))}
             </div>
-            
-            <Button 
-              variant="outline" 
-              className="mt-4"
-              onClick={() => setGameActive(false)}
+
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                setGameActive(false);
+                setGameOver(false);
+                clearTimer();
+              }}
             >
               End Game
             </Button>
