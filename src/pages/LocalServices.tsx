@@ -59,6 +59,21 @@ const mentalHealthServices = [
     services: ["Mental Health Programs", "Training", "Policy Support"],
     coordinates: { lat: 15.0392, lng: 120.6897 },
     description: "Regional mental health program coordination"
+  },
+  {
+    id: 6,
+    name: "Softnet Information Technology Center",
+    type: "Community Resource Center",
+    address: "Camaya Coast Road, Mariveles, Bataan",
+    phone: "(047) 935-5678",
+    hours: "Mon-Fri: 9:00 AM - 6:00 PM",
+    services: [
+      "Digital Mental Health Resources", 
+      "Community Training", 
+      "Referral Assistance"
+    ],
+    coordinates: { lat: 14.4362, lng: 120.4956 },
+    description: "Provides access to mental health information and digital support for the Mariveles community"
   }
 ];
 
@@ -83,6 +98,8 @@ export default function LocalServices() {
         return 'bg-purple-100 text-purple-800';
       case 'regional health office':
         return 'bg-orange-100 text-orange-800';
+      case 'community resource center':
+        return 'bg-cyan-100 text-cyan-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
