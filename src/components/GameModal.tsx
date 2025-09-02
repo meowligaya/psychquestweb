@@ -8,33 +8,33 @@ interface GameModalProps {
   isOpen: boolean;
   onClose: () => void;
   gameType: string;
-  ageGroup: string;
+  questGroup: string;
 }
 
-export default function GameModal({ isOpen, onClose, gameType, ageGroup }: GameModalProps) {
+export default function GameModal({ isOpen, onClose, gameType, questGroup }: GameModalProps) {
   const getGameComponent = () => {
-    if (ageGroup === 'child' && gameType.includes('Happy Face')) {
+    if (questGroup === 'emotionExplorer' && gameType.includes('Happy Face')) {
       return <EmotionGame />;
     }
-    if (ageGroup === 'teen' && gameType.includes('Stress')) {
+    if (questGroup === 'mindMaster' && gameType.includes('Stress')) {
       return <StressGame />;
     }
-    if (ageGroup === 'young-adult' && gameType.includes('Time')) {
+    if (questGroup === 'timeTactician' && gameType.includes('Time')) {
       return <TimeGame />;
     }
-    if (ageGroup === 'adult' && gameType.includes('Mindful')) {
+    if (questGroup === 'mindfulSage' && gameType.includes('Mindful')) {
       return <MindfulnessGame />;
     }
     
-    // Default fallback games based on age group
-    switch (ageGroup) {
-      case 'child':
+    // Default fallback games based on quest group
+    switch (questGroup) {
+      case 'emotionExplorer':
         return <EmotionGame />;
-      case 'teen':
+      case 'mindMaster':
         return <StressGame />;
-      case 'young-adult':
+      case 'timeTactician':
         return <TimeGame />;
-      case 'adult':
+      case 'mindfulSage':
         return <MindfulnessGame />;
       default:
         return <EmotionGame />;
