@@ -17,7 +17,7 @@ const ageGroups = [
   },
   {
     id: "teen", 
-    label: "Breathe Master",
+    label: "Mind Master",
     description: "",
     icon: Heart,
     color: "from-primary/30 to-sunset-purple/30",
