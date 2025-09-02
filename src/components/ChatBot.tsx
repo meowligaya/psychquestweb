@@ -185,7 +185,7 @@ export default function ChatBot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setShowOptions(false);
+    setShowOptions(false); // Keep options hidden until user chooses to show
 
     setTimeout(() => {
       // Pick a random response from the available responses for the label
@@ -196,7 +196,7 @@ export default function ChatBot() {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botMessage]);
-      setShowOptions(true);
+      // Do NOT set showOptions to true here; user must click "Show Options"
     }, 800);
   };
 
