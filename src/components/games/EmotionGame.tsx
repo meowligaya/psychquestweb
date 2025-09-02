@@ -18,6 +18,17 @@ const MAX_TOTAL_EMOJIS = 100; // allow game to get very hard
 const ROUND_TIME = 60; // 1 minute in seconds
 const WRONG_PENALTY = 3; // Lose 3 seconds on wrong answer
 
+// Set a fixed column count for wider screens, but allow responsiveness
+const COLUMN_COUNT = 4;
+
+function getEmojiSize(totalEmojis: number) {
+  // Emoji size shrinks as totalEmojis increases (min 1.6rem, max 2.5rem)
+  if (totalEmojis <= 16) return "text-4xl"; // 2.25rem
+  if (totalEmojis <= 24) return "text-3xl"; // 1.875rem
+  if (totalEmojis <= 36) return "text-2xl"; // 1.5rem
+  return "text-xl"; // 1.25rem (fallback for many emojis)
+}
+
 export default function FindTheEmojiGame() {
   const [gameActive, setGameActive] = useState(false);
   const [score, setScore] = useState(0);
@@ -114,8 +125,29 @@ export default function FindTheEmojiGame() {
     return () => clearTimer();
   }, [gameActive, gameOver, score]);
 
+  // Pad the emoji array so the grid is always full rows (optional but looks better)
+  const getPaddedEmojiArray = () => {
+    const remainder = totalEmojis % COLUMN_COUNT;
+    const padCount = remainder === 0 ? 0 : COLUMN_COUNT - remainder;
+    return [
+      ...Array.from({ length: totalEmojis }),
+      ...Array.from({ length: padCount }),
+    ];
+  };
+
+  // Responsive grid columns for mobile
+  const gridColumns = `
+    grid-cols-2 
+    sm:grid-cols-3 
+    md:grid-cols-4 
+    lg:grid-cols-${COLUMN_COUNT}
+  `;
+
+  // Responsive max widths for mobile/desktop
+  const gridMaxWidth = "max-w-[98vw] sm:max-w-[400px]";
+
   return (
-    <Card className="island-card p-6">
+    <Card className="island-card p-4 sm:p-6">
       <div className="text-center">
         <h3 className="text-2xl font-bold mb-4 font-nunito">Find the Unique Emoji</h3>
 
@@ -151,22 +183,43 @@ export default function FindTheEmojiGame() {
             </p>
 
             <div
-              className={`grid gap-3 justify-center mx-auto`}
+              className={`grid gap-2 sm:gap-3 overflow-x-auto overflow-y-auto mx-auto ${gridColumns} ${gridMaxWidth}`}
               style={{
-                gridTemplateColumns: `repeat(${Math.min(6, Math.ceil(Math.sqrt(totalEmojis)))}, minmax(0, 1fr))`,
-                maxWidth: "400px"
+                maxHeight: "60vh", // makes grid scrollable on mobile when too many
+                minHeight: "120px",
               }}
             >
-              {Array.from({ length: totalEmojis }).map((_, i) => (
-                <Button
-                  key={i}
-                  variant="outline"
-                  className="p-4 text-4xl"
-                  onClick={() => handleEmojiClick(i)}
-                >
-                  {i === targetIndex ? targetEmotion.emoji : commonEmotion.emoji}
-                </Button>
-              ))}
+              {getPaddedEmojiArray().map((_, i) => {
+                // Only real emojis (not padding) are clickable and displayed
+                if (i < totalEmojis) {
+                  return (
+                    <Button
+                      key={i}
+                      variant="outline"
+                      className={`!h-12 !w-12 sm:!h-16 sm:!w-16 p-0 flex items-center justify-center ${getEmojiSize(totalEmojis)}`}
+                      style={{
+                        minWidth: "2.5rem",
+                        minHeight: "2.5rem",
+                        fontSize:
+                          totalEmojis > 36
+                            ? "1.5rem"
+                            : totalEmojis > 24
+                            ? "2rem"
+                            : "",
+                        touchAction: "manipulation",
+                      }}
+                      onClick={() => handleEmojiClick(i)}
+                    >
+                      {i === targetIndex ? targetEmotion.emoji : commonEmotion.emoji}
+                    </Button>
+                  );
+                } else {
+                  // Invisible padding cell for alignment
+                  return (
+                    <span key={`pad-${i}`} className="invisible" />
+                  );
+                }
+              })}
             </div>
 
             <Button
