@@ -14,9 +14,9 @@ const emotions = [
 ];
 
 const INITIAL_TOTAL_EMOJIS = 12; // start with 12 emojis
-const MAX_TOTAL_EMOJIS = 42; // max emojis to increase difficulty
-const MAX_SCORE = 10; // game ends at 10 points
-const ROUND_TIME = 15; // seconds per round
+const MAX_TOTAL_EMOJIS = 100; // allow game to get very hard
+const ROUND_TIME = 60; // 1 minute in seconds
+const WRONG_PENALTY = 3; // Lose 3 seconds on wrong answer
 
 export default function FindTheEmojiGame() {
   const [gameActive, setGameActive] = useState(false);
@@ -52,7 +52,6 @@ export default function FindTheEmojiGame() {
     setTargetEmotion(target);
     setTargetIndex(Math.floor(Math.random() * numEmojis));
     setTotalEmojis(numEmojis);
-    setTimeLeft(ROUND_TIME);
   };
 
   // Handle emoji click
@@ -64,21 +63,26 @@ export default function FindTheEmojiGame() {
       setScore(newScore);
       toast.success("Correct! 🎉");
 
-      if (newScore >= MAX_SCORE) {
-        setGameOver(true);
-        setGameActive(false);
-        toast.success(`Game Over! Your final score is ${newScore}. 🎉`);
-        clearTimer();
-      } else {
-        // Increase difficulty every 2 points by adding 4 emojis, capped at MAX_TOTAL_EMOJIS
-        const nextTotal = Math.min(
-          INITIAL_TOTAL_EMOJIS + Math.floor(newScore / 2) * 4,
-          MAX_TOTAL_EMOJIS
-        );
-        setupRound(nextTotal);
-      }
+      // Increase difficulty as score increases
+      // e.g. every 2 points, add 4 emojis, up to MAX_TOTAL_EMOJIS
+      const nextTotal = Math.min(
+        INITIAL_TOTAL_EMOJIS + Math.floor(newScore / 2) * 4,
+        MAX_TOTAL_EMOJIS
+      );
+      setupRound(nextTotal);
     } else {
-      toast.error("Oops! Try again 👀");
+      toast.error(`Oops! -${WRONG_PENALTY}s 👀`);
+      setTimeLeft((prev) => {
+        const updated = prev - WRONG_PENALTY;
+        if (updated <= 0) {
+          setGameOver(true);
+          setGameActive(false);
+          toast.error(`Time's up! Your final score is ${score}.`);
+          clearTimer();
+          return 0;
+        }
+        return updated;
+      });
     }
   };
 
@@ -118,7 +122,7 @@ export default function FindTheEmojiGame() {
         {!gameActive && !gameOver ? (
           <div>
             <p className="text-muted-foreground mb-4">
-              Find the one emoji that is different from the others! Difficulty increases as you score. You have {ROUND_TIME} seconds per round.
+              Find the one emoji that is different from the others! Difficulty increases as you score. You have 1 minute to get the highest score possible. Wrong answers deduct {WRONG_PENALTY} seconds!
             </p>
             <Button onClick={startGame} className="ocean-button">
               Start Game
