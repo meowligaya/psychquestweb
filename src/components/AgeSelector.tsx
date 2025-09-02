@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Baby, Users, Heart, Briefcase, PersonStanding, Clock1, BrainCog, HelpCircle } from "lucide-react";
 
-interface QuestSelectorProps {
-  onQuestSelect: (questGroup: string) => void;
+interface AgeSelectorProps {
+  onAgeSelect: (ageGroup: string) => void;
 }
 
-const questGroups = [
+const ageGroups = [
   {
-    id: "emotionExplorer",
+    id: "child",
     label: "Emotion Explorer",
     description: "",
     icon: BrainCog,
@@ -16,7 +16,7 @@ const questGroups = [
     activities: "Fun games & emotion learning"
   },
   {
-    id: "mindMaster", 
+    id: "teen", 
     label: "Mind Master",
     description: "",
     icon: Heart,
@@ -24,7 +24,7 @@ const questGroups = [
     activities: "Stress management & social skills"
   },
   {
-    id: "timeTactician",
+    id: "young-adult",
     label: "Time Tactician", 
     description: "",
     icon: Clock1,
@@ -32,7 +32,7 @@ const questGroups = [
     activities: "Life transitions & relationships"
   },
   {
-    id: "mindfulSage",
+    id: "adult",
     label: "Mindful Sage",
     description: "",
     icon: Briefcase,
@@ -40,7 +40,7 @@ const questGroups = [
     activities: "Work-life balance & mindfulness"
   },
   {
-    id: "quizCove",
+    id: "quiz",
     label: "Quiz Cove",
     description: "Test your knowledge on psychological health",
     icon: HelpCircle,
@@ -49,7 +49,7 @@ const questGroups = [
   }
 ];
 
-export default function QuestSelector({ onQuestSelect }: QuestSelectorProps) {
+export default function AgeSelector({ onAgeSelect }: AgeSelectorProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-full px-4">
@@ -66,13 +66,13 @@ export default function QuestSelector({ onQuestSelect }: QuestSelectorProps) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {questGroups.map((group) => {
+          {ageGroups.map((group) => {
             const IconComponent = group.icon;
             return (
               <Card 
                 key={group.id} 
                 className="age-group-card cursor-pointer"
-                onClick={() => onQuestSelect(group.id)}
+                onClick={() => onAgeSelect(group.id)}
               >
                 <div className={`w-full h-full p-6 bg-gradient-to-br ${group.color} rounded-3xl`}>
                   <div className="flex flex-col items-center text-center space-y-4">

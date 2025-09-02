@@ -23,13 +23,13 @@ import BreathingModal from "./BreathingModal";
 import QuizModal from "./QuizModal";
 
 interface IslandDashboardProps {
-  questGroup: string;
+  ageGroup: string;
   userName?: string;
 }
 
-const getQuestGroupContent = (questGroup: string) => {
+const getAgeGroupContent = (ageGroup: string) => {
   const content = {
-    emotionExplorer: {
+    child: {
       title: "Emotion Island",
       description: "Learn about feelings and make friends!",
       activities: [
@@ -38,7 +38,7 @@ const getQuestGroupContent = (questGroup: string) => {
       ],
       achievements: ["First Smile", "Emotion Expert", "Helper Hero"]
     },
-    mindMaster: {
+    teen: {
       title: "Resilience Archipelago", 
       description: "Navigate life's waves with confidence",
       activities: [
@@ -47,7 +47,7 @@ const getQuestGroupContent = (questGroup: string) => {
       ],
       achievements: ["Stress Warrior", "Choice Champion", "Social Navigator"]
     },
-    timeTactician: {
+    "young-adult": {
       title: "Growth Peninsula",
       description: "Building your future, one step at a time", 
       activities: [
@@ -56,7 +56,7 @@ const getQuestGroupContent = (questGroup: string) => {
       ],
       achievements: ["Time Master", "Goal Crusher", "Independence Hero"]
     },
-    mindfulSage: {
+    adult: {
       title: "Mindful Sanctuary",
       description: "Find balance in life's complexity",
       activities: [
@@ -65,7 +65,7 @@ const getQuestGroupContent = (questGroup: string) => {
       ],
       achievements: ["Zen Master", "Balance Keeper", "Wisdom Guardian"]
     },
-    quizCove: {
+    quiz: {
       title: "Quiz Cove",
       description: "Test your knowledge on psychological health!",
       activities: [
@@ -75,15 +75,15 @@ const getQuestGroupContent = (questGroup: string) => {
     }
   };
   
-  return content[questGroup as keyof typeof content] || content.emotionExplorer;
+  return content[ageGroup as keyof typeof content] || content.child;
 };
 
-export default function IslandDashboard({ questGroup, userName = "Explorer" }: IslandDashboardProps) {
-  const content = getQuestGroupContent(questGroup);
+export default function IslandDashboard({ ageGroup, userName = "Explorer" }: IslandDashboardProps) {
+  const content = getAgeGroupContent(ageGroup);
   const navigate = useNavigate();
-  const [gameModal, setGameModal] = useState({ isOpen: false, gameType: "", questGroup: "" });
+  const [gameModal, setGameModal] = useState({ isOpen: false, gameType: "", ageGroup: "" });
   const [breathingOpen, setBreathingOpen] = useState(false);
-  const [quizModal, setQuizModal] = useState({ isOpen: false, quizType: "", questGroup: "" });
+  const [quizModal, setQuizModal] = useState({ isOpen: false, quizType: "", ageGroup: "" });
 
   return (
     <div className="min-h-screen p-2 sm:p-4">
@@ -189,7 +189,7 @@ export default function IslandDashboard({ questGroup, userName = "Explorer" }: I
                         <Button 
                           size="sm" 
                           className="ocean-button"
-                          onClick={() => setGameModal({ isOpen: true, gameType: activity.name, questGroup })}
+                          onClick={() => setGameModal({ isOpen: true, gameType: activity.name, ageGroup })}
                         >
                           <Play className="w-3 h-3 mr-1" />
                           <span className="hidden xs:inline">Play</span>
@@ -207,7 +207,7 @@ export default function IslandDashboard({ questGroup, userName = "Explorer" }: I
                         <Button 
                           size="sm" 
                           className="quiz-button"
-                          onClick={() => setQuizModal({ isOpen: true, quizType: activity.name, questGroup })}
+                          onClick={() => setQuizModal({ isOpen: true, quizType: activity.name, ageGroup })}
                         >
                           <Star className="w-3 h-3 mr-1" />
                           <span className="hidden xs:inline">Start Quiz</span>
@@ -310,16 +310,16 @@ export default function IslandDashboard({ questGroup, userName = "Explorer" }: I
       
       <GameModal 
         isOpen={gameModal.isOpen}
-        onClose={() => setGameModal({ isOpen: false, gameType: "", questGroup: "" })}
+        onClose={() => setGameModal({ isOpen: false, gameType: "", ageGroup: "" })}
         gameType={gameModal.gameType}
-        questGroup={gameModal.questGroup}
+        ageGroup={gameModal.ageGroup}
       />
 
       <QuizModal 
         isOpen={quizModal.isOpen}
-        onClose={() => setQuizModal({ isOpen: false, quizType: "", questGroup: "" })}
+        onClose={() => setQuizModal({ isOpen: false, quizType: "", ageGroup: "" })}
         quizType={quizModal.quizType}
-        questGroup={quizModal.questGroup}
+        ageGroup={quizModal.ageGroup}
       />
     </div>
     
