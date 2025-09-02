@@ -36,6 +36,8 @@ const chatOptions = [
   { label: "I'm learning and growing", response: "Every day brings new opportunities for learning and growth. Be proud of your journey and the person you're becoming. 🌱" }
 ];
 
+// ...imports and chatOptions remain unchanged
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -83,15 +85,15 @@ export default function ChatBot() {
   return (
     <Card
       className="
-        fixed bottom-4 right-4 w-[90vw] max-w-sm h-[85vh] z-50 island-card flex flex-col
-        sm:bottom-6 sm:right-6 sm:w-80 sm:h-96
+        fixed bottom-4 right-4 w-[96vw] max-w-lg h-[75vh] z-50 island-card flex flex-col
+        sm:bottom-6 sm:right-6 sm:w-[420px] sm:h-[540px]
         rounded-xl
         shadow-lg
         bg-white
         transition-all
       "
       style={{
-        maxWidth: '420px',
+        maxWidth: '520px',
         minWidth: '260px',
         boxSizing: 'border-box'
       }}
@@ -147,12 +149,9 @@ export default function ChatBot() {
           className="
             grid grid-cols-2 gap-2
             sm:flex sm:flex-wrap sm:gap-2
-            max-h-[160px] overflow-y-auto overscroll-y-contain
+            max-h-[200px] overflow-y-auto overscroll-y-contain
             mb-2
             "
-          style={{
-            marginBottom: '0.5rem'
-          }}
         >
           {chatOptions.map((option, idx) => (
             <Button
@@ -162,7 +161,7 @@ export default function ChatBot() {
               variant="outline"
               style={{
                 boxSizing: 'border-box',
-                fontSize: '0.92rem',
+                fontSize: '0.98rem',
                 margin: 0,
                 maxWidth: '100%'
               }}
