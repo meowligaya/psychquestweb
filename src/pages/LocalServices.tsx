@@ -64,7 +64,7 @@ const mentalHealthServices = [
     id: 6,
     name: "Softnet Information Technology Center",
     type: "Community Resource Center",
-    address: "Camaya Coast Road, Mariveles, Bataan",
+    address: "SFB No. 8, FAB, Mariveles, Bataan",
     phone: "(047) 935-5678",
     hours: "Mon-Fri: 9:00 AM - 6:00 PM",
     services: [
@@ -217,7 +217,7 @@ export default function LocalServices() {
               <h4 className="font-semibold mb-2">Online Support</h4>
               <ul className="space-y-1 text-muted-foreground">
                 <li>• Department of Health Mental Health Programs</li>
-                <li>• Natasha Goulbourn Foundation</li>
+                <li>• National Center for Mental Health</li>
                 <li>• Philippine Mental Health Association</li>
               </ul>
             </div>

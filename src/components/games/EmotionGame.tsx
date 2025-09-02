@@ -13,10 +13,25 @@ const emotions = [
   { emoji: "🤔", name: "Confused", color: "bg-green-100" }
 ];
 
-const INITIAL_TOTAL_EMOJIS = 12; // start with 12 emojis
-const MAX_TOTAL_EMOJIS = 100; // allow game to get very hard
-const ROUND_TIME = 60; // 1 minute in seconds
-const WRONG_PENALTY = 3; // Lose 3 seconds on wrong answer
+const INITIAL_TOTAL_EMOJIS = 12;
+const MAX_TOTAL_EMOJIS = 100;
+const ROUND_TIME = 60;
+const WRONG_PENALTY = 3;
+
+// Dynamically determine the number of columns by squaring for a square-like grid
+function getColumns(totalEmojis: number) {
+  return Math.max(2, Math.ceil(Math.sqrt(totalEmojis)));
+}
+
+// Dynamically determine emoji/button size based on grid size
+function getEmojiSize(totalEmojis: number) {
+  if (totalEmojis <= 16) return "text-4xl !h-16 !w-16";
+  if (totalEmojis <= 25) return "text-3xl !h-14 !w-14";
+  if (totalEmojis <= 36) return "text-2xl !h-12 !w-12";
+  if (totalEmojis <= 49) return "text-xl !h-10 !w-10";
+  if (totalEmojis <= 64) return "text-lg !h-8 !w-8";
+  return "text-base !h-7 !w-7";
+}
 
 export default function FindTheEmojiGame() {
   const [gameActive, setGameActive] = useState(false);
@@ -64,7 +79,6 @@ export default function FindTheEmojiGame() {
       toast.success("Correct! 🎉");
 
       // Increase difficulty as score increases
-      // e.g. every 2 points, add 4 emojis, up to MAX_TOTAL_EMOJIS
       const nextTotal = Math.min(
         INITIAL_TOTAL_EMOJIS + Math.floor(newScore / 2) * 4,
         MAX_TOTAL_EMOJIS
@@ -114,8 +128,18 @@ export default function FindTheEmojiGame() {
     return () => clearTimer();
   }, [gameActive, gameOver, score]);
 
+  // Pad the emoji array so the grid is always full rows
+  const columns = getColumns(totalEmojis);
+  const remainder = totalEmojis % columns;
+  const padCount = remainder === 0 ? 0 : columns - remainder;
+  const paddedEmojis = [
+    ...Array.from({ length: totalEmojis }),
+    ...Array.from({ length: padCount }),
+  ];
+  const emojiSizeClass = getEmojiSize(totalEmojis);
+
   return (
-    <Card className="island-card p-6">
+    <Card className="island-card p-2 sm:p-4">
       <div className="text-center">
         <h3 className="text-2xl font-bold mb-4 font-nunito">Find the Unique Emoji</h3>
 
@@ -151,22 +175,33 @@ export default function FindTheEmojiGame() {
             </p>
 
             <div
-              className={`grid gap-3 justify-center mx-auto`}
+              className="grid gap-1 sm:gap-2 justify-center mx-auto"
               style={{
-                gridTemplateColumns: `repeat(${Math.min(6, Math.ceil(Math.sqrt(totalEmojis)))}, minmax(0, 1fr))`,
-                maxWidth: "400px"
+                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+                width: "100%",
+                maxWidth: 400,
+                margin: "0 auto"
               }}
             >
-              {Array.from({ length: totalEmojis }).map((_, i) => (
-                <Button
-                  key={i}
-                  variant="outline"
-                  className="p-4 text-4xl"
-                  onClick={() => handleEmojiClick(i)}
-                >
-                  {i === targetIndex ? targetEmotion.emoji : commonEmotion.emoji}
-                </Button>
-              ))}
+              {paddedEmojis.map((_, i) =>
+                i < totalEmojis ? (
+                  <Button
+                    key={i}
+                    variant="outline"
+                    className={`flex items-center justify-center p-0 ${emojiSizeClass}`}
+                    onClick={() => handleEmojiClick(i)}
+                    style={{
+                      minWidth: 0,
+                      minHeight: 0,
+                      aspectRatio: "1 / 1"
+                    }}
+                  >
+                    {i === targetIndex ? targetEmotion.emoji : commonEmotion.emoji}
+                  </Button>
+                ) : (
+                  <span key={`pad-${i}`} className="invisible" />
+                )
+              )}
             </div>
 
             <Button
