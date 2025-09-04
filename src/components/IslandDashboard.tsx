@@ -108,9 +108,7 @@ export default function IslandDashboard({ ageGroup, userName = "Explorer" }: Isl
           <Button variant="outline" size="icon" className="rounded-full">
             <User className="w-5 h-5" />
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full">
-            <Settings className="w-5 h-5" />
-          </Button>
+          
         </div>
       </div>
 
