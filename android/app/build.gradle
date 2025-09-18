@@ -32,6 +32,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def newApkName = "MHapa.apk"
+            output.outputFileName = newApkName
+        }
+    }
 }
 
 repositories {

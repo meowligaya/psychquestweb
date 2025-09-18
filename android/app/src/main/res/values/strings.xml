@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">psychquest-game</string>
-    <string name="title_activity_main">psychquest-game</string>
+    <string name="app_name">MHapa</string>
+    <string name="title_activity_main">MHapa</string>
     <string name="package_name">com.psychquest.game</string>
     <string name="custom_url_scheme">com.psychquest.game</string>
 </resources>

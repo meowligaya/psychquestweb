@@ -24,7 +24,7 @@ export default function Login() {
           <div className="mx-auto w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center mb-3">
             <span className="text-blue-600 text-xl font-bold">Ψ</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800">Welcome Back</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Welcome to MHapa!</h1>
           <p className="text-gray-500">Continue your mental wellness journey</p>
         </div>
 
