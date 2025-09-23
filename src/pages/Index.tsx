@@ -1,22 +1,22 @@
 import { useState } from "react";
-import AgeSelector from "../components/AgeSelector";
+import IslandSelector from "../components/IslandSelector";
 import IslandDashboard from "../components/IslandDashboard";
 import ChatBot from "../components/ChatBot";
 
 const Index = () => {
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string | null>(null);
+  const [selectedIsland, setSelectedIsland] = useState<string | null>(null);
 
-  const handleAgeSelect = (ageGroup: string) => {
-    setSelectedAgeGroup(ageGroup);
+  const handleIslandSelect = (island: string) => {
+    setSelectedIsland(island);
   };
 
   return (
     <div className="min-h-screen">
-      {!selectedAgeGroup ? (
-        <AgeSelector onAgeSelect={handleAgeSelect} />
+      {!selectedIsland ? (
+        <IslandSelector onIslandSelect={handleIslandSelect} />
       ) : (
         <>
-          <IslandDashboard ageGroup={selectedAgeGroup} />
+          <IslandDashboard island={selectedIsland} />
           <ChatBot />
         </>
       )}

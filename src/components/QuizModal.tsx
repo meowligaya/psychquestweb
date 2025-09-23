@@ -5,7 +5,7 @@ interface QuizModalProps {
   isOpen: boolean;
   onClose: () => void;
   quizType: string;
-  ageGroup: string;
+  island: string; // Changed from ageGroup to island
 }
 
 interface Question {
@@ -47,7 +47,7 @@ const questions: Question[] = [
   }
 ];
 
-export default function QuizModal({ isOpen, onClose, quizType, ageGroup }: QuizModalProps) {
+export default function QuizModal({ isOpen, onClose, quizType, island }: QuizModalProps) {
   if (!isOpen) return null;
 
   const [currentIndex, setCurrentIndex] = useState(0);

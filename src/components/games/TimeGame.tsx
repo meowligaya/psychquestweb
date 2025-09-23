@@ -1,68 +1,162 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Clock, CheckCircle } from "lucide-react";
+import { Clock, CheckCircle, Heart, BookOpen, Smile } from "lucide-react";
 
-const tasks = [
-  { name: "Morning Exercise", time: 30, category: "Health", priority: "high" },
-  { name: "Check Emails", time: 15, category: "Work", priority: "medium" },
-  { name: "Lunch Break", time: 45, category: "Personal", priority: "high" },
-  { name: "Project Planning", time: 60, category: "Work", priority: "high" },
-  { name: "Social Media", time: 20, category: "Entertainment", priority: "low" },
-  { name: "Learning Session", time: 40, category: "Education", priority: "medium" }
+/**
+ * Mental Wellness Planner Game
+ * Plan a healthy day by scheduling tasks that support your mental health and wellbeing.
+ * Each activity includes a mental health benefit. Try to balance your day for the best score!
+ */
+
+const activities = [
+  {
+    name: "Morning Stretch",
+    time: 20,
+    category: "Physical Wellness",
+    priority: "high",
+    benefit: "Regular movement can reduce anxiety and boost mood."
+  },
+  {
+    name: "Mindful Breathing",
+    time: 10,
+    category: "Mindfulness",
+    priority: "high",
+    benefit: "Mindfulness helps you manage stress and stay grounded."
+  },
+  {
+    name: "Talk to a Friend",
+    time: 25,
+    category: "Social Connection",
+    priority: "medium",
+    benefit: "Connecting with others supports emotional wellbeing."
+  },
+  {
+    name: "Read a Book",
+    time: 30,
+    category: "Relaxation",
+    priority: "medium",
+    benefit: "Reading can help you relax and escape negative thoughts."
+  },
+  {
+    name: "Healthy Lunch",
+    time: 40,
+    category: "Nutrition",
+    priority: "high",
+    benefit: "Eating nutritious meals can improve energy and focus."
+  },
+  {
+    name: "Nature Walk",
+    time: 30,
+    category: "Self-Care",
+    priority: "high",
+    benefit: "Spending time outdoors reduces stress and improves mood."
+  },
+  {
+    name: "Short Nap",
+    time: 15,
+    category: "Rest",
+    priority: "low",
+    benefit: "Rest helps your brain recharge and recover from stress."
+  },
+  {
+    name: "Journaling",
+    time: 20,
+    category: "Reflection",
+    priority: "medium",
+    benefit: "Writing about your feelings can provide clarity and relief."
+  },
+  {
+    name: "Watch a Comedy",
+    time: 30,
+    category: "Laughter",
+    priority: "low",
+    benefit: "Laughter releases endorphins and lowers stress levels."
+  },
+  {
+    name: "Gratitude Practice",
+    time: 10,
+    category: "Mindfulness",
+    priority: "medium",
+    benefit: "Gratitude boosts positivity and lowers depressive symptoms."
+  },
 ];
 
-export default function TimeGame() {
-  const [selectedTasks, setSelectedTasks] = useState<typeof tasks>([]);
-  const [timeRemaining, setTimeRemaining] = useState(240); // 4 hours in minutes
+const TOTAL_TIME = 240; // 4 hours in minutes
+
+export default function MentalHealthTimeGame() {
+  const [selectedActivities, setSelectedActivities] = useState<typeof activities>([]);
+  const [timeRemaining, setTimeRemaining] = useState(TOTAL_TIME);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState(0);
 
   const startGame = () => {
     setGameStarted(true);
-    setSelectedTasks([]);
-    setTimeRemaining(240);
+    setSelectedActivities([]);
+    setTimeRemaining(TOTAL_TIME);
     setScore(0);
   };
 
-  const addTask = (task: typeof tasks[0]) => {
-    if (timeRemaining >= task.time) {
-      setSelectedTasks([...selectedTasks, task]);
-      setTimeRemaining(timeRemaining - task.time);
-      
-      // Calculate score based on priority
-      const points = task.priority === 'high' ? 30 : task.priority === 'medium' ? 20 : 10;
+  const addActivity = (activity: typeof activities[0]) => {
+    if (timeRemaining >= activity.time) {
+      setSelectedActivities([...selectedActivities, activity]);
+      setTimeRemaining(timeRemaining - activity.time);
+
+      // Score: prioritize high (30), medium (20), low (10), bonus for balance
+      const points = activity.priority === 'high' ? 30 : activity.priority === 'medium' ? 20 : 10;
       setScore(score + points);
-      
-      toast.success(`Added ${task.name}! +${points} points`);
+
+      toast.success(
+        <span>
+          Added <strong>{activity.name}</strong>! <br />
+          <span className="text-xs italic">{activity.benefit}</span> <br />
+          +{points} points
+        </span>
+      );
     } else {
-      toast.error("Not enough time for this task!");
+      toast.error("Not enough time for this activity!");
     }
   };
 
-  const removeTask = (taskIndex: number) => {
-    const task = selectedTasks[taskIndex];
-    setSelectedTasks(selectedTasks.filter((_, index) => index !== taskIndex));
-    setTimeRemaining(timeRemaining + task.time);
-    
-    const points = task.priority === 'high' ? 30 : task.priority === 'medium' ? 20 : 10;
+  const removeActivity = (activityIndex: number) => {
+    const activity = selectedActivities[activityIndex];
+    setSelectedActivities(selectedActivities.filter((_, index) => index !== activityIndex));
+    setTimeRemaining(timeRemaining + activity.time);
+
+    const points = activity.priority === 'high' ? 30 : activity.priority === 'medium' ? 20 : 10;
     setScore(Math.max(0, score - points));
   };
 
   const finishDay = () => {
-    const highPriorityTasks = selectedTasks.filter(task => task.priority === 'high').length;
-    const bonus = highPriorityTasks * 10;
+    // Score bonuses: at least 1 from each category = +40, at least 1 from each priority = +30
+    const categories = new Set(selectedActivities.map(a => a.category));
+    const priorities = new Set(selectedActivities.map(a => a.priority));
+    let bonus = 0;
+    if (
+      ["Physical Wellness", "Mindfulness", "Social Connection", "Nutrition", "Self-Care", "Rest", "Reflection", "Laughter", "Relaxation"].every(cat => categories.has(cat) || activities.some(a => a.category === cat && selectedActivities.includes(a)))
+    ) {
+      bonus += 40;
+    }
+    if (["high", "medium", "low"].every(prio => priorities.has(prio))) {
+      bonus += 30;
+    }
     const finalScore = score + bonus;
-    
-    toast.success(`Day completed! Final score: ${finalScore} (Bonus: +${bonus})`);
+
+    toast.success(
+      <span>
+        <strong>Day completed!</strong> <br />
+        Final score: {finalScore} <br />
+        (Bonus: +{bonus} for a balanced day)
+      </span>
+    );
     setGameStarted(false);
   };
 
   const priorityColor = (priority: string) => {
-    switch(priority) {
+    switch (priority) {
       case 'high': return 'bg-red-100 text-red-800';
       case 'medium': return 'bg-yellow-100 text-yellow-800';
       case 'low': return 'bg-green-100 text-green-800';
@@ -70,18 +164,35 @@ export default function TimeGame() {
     }
   };
 
-  const timeProgress = ((240 - timeRemaining) / 240) * 100;
+  const categoryIcon = (category: string) => {
+    switch (category) {
+      case "Physical Wellness": return <Heart className="w-4 h-4 text-red-500" />;
+      case "Mindfulness": return <Smile className="w-4 h-4 text-blue-500" />;
+      case "Social Connection": return <CheckCircle className="w-4 h-4 text-pink-500" />;
+      case "Nutrition": return <Heart className="w-4 h-4 text-green-600" />;
+      case "Self-Care": return <Smile className="w-4 h-4 text-teal-500" />;
+      case "Rest": return <Clock className="w-4 h-4 text-purple-500" />;
+      case "Reflection": return <BookOpen className="w-4 h-4 text-indigo-500" />;
+      case "Laughter": return <Smile className="w-4 h-4 text-yellow-500" />;
+      case "Relaxation": return <BookOpen className="w-4 h-4 text-cyan-500" />;
+      default: return null;
+    }
+  };
+
+  const timeProgress = ((TOTAL_TIME - timeRemaining) / TOTAL_TIME) * 100;
 
   return (
     <Card className="island-card p-6">
       <div>
-        <h3 className="text-2xl font-bold mb-4 font-nunito">Time Management Challenge</h3>
-        
+        <h3 className="text-2xl font-bold mb-4 font-nunito">Mental Wellness Planner</h3>
+
         {!gameStarted ? (
           <div className="text-center">
-            <div className="text-6xl mb-4">⏰</div>
+            <div className="text-6xl mb-4">🧘‍♂️</div>
             <p className="text-muted-foreground mb-4">
-              Plan your perfect day! You have 4 hours to allocate wisely.
+              Welcome! Build your mentally healthy day. <br />
+              Choose activities for your 4-hour schedule.<br />
+              Balance wellness, rest, social time, and self-care for the best score.
             </p>
             <Button onClick={startGame} className="ocean-button">
               Start Planning
@@ -96,27 +207,35 @@ export default function TimeGame() {
                 {Math.floor(timeRemaining / 60)}h {timeRemaining % 60}m left
               </Badge>
             </div>
-            
+
             <Progress value={timeProgress} className="mb-6" />
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-semibold mb-3">Available Tasks</h4>
+                <h4 className="font-semibold mb-3">Available Activities</h4>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {tasks.map((task, index) => (
+                  {activities.map((activity, index) => (
                     <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
-                        <div className="font-medium">{task.name}</div>
-                        <div className="text-sm text-muted-foreground">{task.time} min • {task.category}</div>
+                        <div className="flex items-center gap-2 font-medium">
+                          {categoryIcon(activity.category)}
+                          {activity.name}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {activity.time} min • {activity.category}
+                        </div>
+                        <div className="text-xs mt-1 text-blue-800 italic">
+                          {activity.benefit}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className={priorityColor(task.priority)} variant="secondary">
-                          {task.priority}
+                        <Badge className={priorityColor(activity.priority)} variant="secondary">
+                          {activity.priority}
                         </Badge>
-                        <Button 
-                          size="sm" 
-                          onClick={() => addTask(task)}
-                          disabled={timeRemaining < task.time}
+                        <Button
+                          size="sm"
+                          onClick={() => addActivity(activity)}
+                          disabled={timeRemaining < activity.time}
                         >
                           Add
                         </Button>
@@ -125,28 +244,29 @@ export default function TimeGame() {
                   ))}
                 </div>
               </div>
-              
+
               <div>
-                <h4 className="font-semibold mb-3">Your Schedule</h4>
+                <h4 className="font-semibold mb-3">Your Wellness Schedule</h4>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {selectedTasks.length === 0 ? (
+                  {selectedActivities.length === 0 ? (
                     <p className="text-muted-foreground text-center py-8">
-                      No tasks scheduled yet
+                      No activities scheduled yet
                     </p>
                   ) : (
-                    selectedTasks.map((task, index) => (
+                    selectedActivities.map((activity, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-600" />
                           <div>
-                            <div className="font-medium">{task.name}</div>
-                            <div className="text-sm text-muted-foreground">{task.time} min</div>
+                            <div className="font-medium">{activity.name}</div>
+                            <div className="text-sm text-muted-foreground">{activity.time} min</div>
+                            <div className="text-xs mt-1 text-blue-800 italic">{activity.benefit}</div>
                           </div>
                         </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={() => removeTask(index)}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => removeActivity(index)}
                         >
                           Remove
                         </Button>
@@ -154,9 +274,9 @@ export default function TimeGame() {
                     ))
                   )}
                 </div>
-                
-                {selectedTasks.length > 0 && (
-                  <Button 
+
+                {selectedActivities.length > 0 && (
+                  <Button
                     className="w-full mt-4 beach-button"
                     onClick={finishDay}
                   >

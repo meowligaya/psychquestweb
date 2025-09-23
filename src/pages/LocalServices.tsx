@@ -112,7 +112,7 @@ export default function LocalServices() {
         <Button 
           variant="outline" 
           size="icon" 
-          onClick={() => navigate('/index')}
+          onClick={() => navigate(-1)}
           className="rounded-full"
         >
           <ArrowLeft className="w-5 h-5" />

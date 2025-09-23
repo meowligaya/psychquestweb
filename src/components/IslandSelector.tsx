@@ -1,55 +1,39 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Baby, Users, Heart, Briefcase, PersonStanding, Clock1, BrainCog, HelpCircle } from "lucide-react";
+import { Gamepad2, HelpCircle, BookOpen } from "lucide-react";
 
-interface AgeSelectorProps {
-  onAgeSelect: (ageGroup: string) => void;
+interface IslandSelectorProps {
+  onIslandSelect: (island: string) => void;
 }
 
-const ageGroups = [
+const islands = [
   {
-    id: "child",
-    label: "Emotion Explorer",
-    description: "",
-    icon: BrainCog,
+    id: "games",
+    label: "Play Isle",
+    description: "Fun games & emotion learning",
+    icon: Gamepad2,
     color: "from-coral/30 to-palm/30",
-    activities: "Fun games & emotion learning"
+    activities: "Explore interactive games for mental wellness."
   },
   {
-    id: "teen", 
-    label: "Mind Master",
-    description: "",
-    icon: Heart,
-    color: "from-primary/30 to-sunset-purple/30",
-    activities: "Stress management & social skills"
-  },
-  {
-    id: "young-adult",
-    label: "Time Tactician", 
-    description: "",
-    icon: Clock1,
-    color: "from-sunset-orange/30 to-coral/30", 
-    activities: "Life transitions & relationships"
-  },
-  {
-    id: "adult",
-    label: "Mindful Sage",
-    description: "",
-    icon: Briefcase,
-    color: "from-palm/30 to-sky/30",
-    activities: "Work-life balance & mindfulness"
-  },
-  {
-    id: "quiz",
+    id: "quizzes",
     label: "Quiz Cove",
     description: "Test your knowledge on psychological health",
     icon: HelpCircle,
     color: "from-sky/30 to-indigo/30",
-    activities: "Multiple choice quizzes & self-assessments"
+    activities: "Multiple choice quizzes & self-assessments."
+  },
+  {
+    id: "lessons",
+    label: "Lesson Lagoon",
+    description: "Learn skills for a healthier mind",
+    icon: BookOpen,
+    color: "from-primary/30 to-sunset-purple/30",
+    activities: "Guided lessons on stress, relationships, and mindfulness."
   }
 ];
 
-export default function AgeSelector({ onAgeSelect }: AgeSelectorProps) {
+export default function IslandSelector({ onIslandSelect }: IslandSelectorProps) {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-full px-4">
@@ -61,20 +45,20 @@ export default function AgeSelector({ onAgeSelect }: AgeSelectorProps) {
             Your mental wellness adventure awaits! 🏝️
           </p>
           <p className="text-lg text-muted-foreground">
-            Choose a quest to begin your journey
+            Choose an island to begin your journey
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {ageGroups.map((group) => {
-            const IconComponent = group.icon;
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {islands.map((island) => {
+            const IconComponent = island.icon;
             return (
               <Card 
-                key={group.id} 
-                className="age-group-card cursor-pointer"
-                onClick={() => onAgeSelect(group.id)}
+                key={island.id} 
+                className="island-card cursor-pointer"
+                onClick={() => onIslandSelect(island.id)}
               >
-                <div className={`w-full h-full p-6 bg-gradient-to-br ${group.color} rounded-3xl`}>
+                <div className={`w-full h-full p-6 bg-gradient-to-br ${island.color} rounded-3xl`}>
                   <div className="flex flex-col items-center text-center space-y-4">
                     <div className="activity-bubble">
                       <IconComponent className="w-8 h-8 text-primary" />
@@ -82,19 +66,19 @@ export default function AgeSelector({ onAgeSelect }: AgeSelectorProps) {
                     
                     <div>
                       <h3 className="text-xl font-bold text-card-foreground font-nunito">
-                        {group.label}
+                        {island.label}
                       </h3>
                       <p className="text-sm text-muted-foreground font-medium">
-                        {group.description}
+                        {island.description}
                       </p>
                     </div>
                     
                     <p className="text-sm text-card-foreground opacity-80 leading-relaxed">
-                      {group.activities}
+                      {island.activities}
                     </p>
                     
                     <Button className="ocean-button w-full">
-                      Start Journey
+                      Sail to Island
                     </Button>
                   </div>
                 </div>
