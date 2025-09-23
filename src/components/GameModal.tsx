@@ -8,37 +8,32 @@ interface GameModalProps {
   isOpen: boolean;
   onClose: () => void;
   gameType: string;
-  ageGroup: string;
+  island: string; // Changed from ageGroup to island
 }
 
-export default function GameModal({ isOpen, onClose, gameType, ageGroup }: GameModalProps) {
+export default function GameModal({ isOpen, onClose, gameType, island }: GameModalProps) {
   const getGameComponent = () => {
-    if (ageGroup === 'child' && gameType.includes('Happy Face')) {
+    // Game selection logic based on island and gameType
+    if (island === 'games' && gameType.includes('Happy Face')) {
       return <EmotionGame />;
     }
-    if (ageGroup === 'teen' && gameType.includes('Stress')) {
+    if (island === 'games' && gameType.includes('MindMatch')) {
       return <StressGame />;
     }
-    if (ageGroup === 'young-adult' && gameType.includes('Time')) {
+    if (island === 'games' && gameType.includes('Time')) {
       return <TimeGame />;
     }
-    if (ageGroup === 'adult' && gameType.includes('Mindful')) {
+    if (island === 'games' && gameType.includes('Mindful')) {
       return <MindfulnessGame />;
     }
-    
-    // Default fallback games based on age group
-    switch (ageGroup) {
-      case 'child':
-        return <EmotionGame />;
-      case 'teen':
-        return <StressGame />;
-      case 'young-adult':
-        return <TimeGame />;
-      case 'adult':
-        return <MindfulnessGame />;
-      default:
-        return <EmotionGame />;
+
+    // Fallback: always return EmotionGame for games island
+    if (island === 'games') {
+      return <EmotionGame />;
     }
+
+    // Other islands do not have games, fallback to EmotionGame as default
+    return <EmotionGame />;
   };
 
   return (
